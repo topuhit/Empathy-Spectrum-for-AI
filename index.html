@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Empathy Spectrum for AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            padding: 40px 0;
+        }
+        
+        .container {
+            max-width: 900px;
+        }
+        
+        h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #999;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+        
+        .slider-container {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .slider-container:hover {
+            border-color: #666;
+            background: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(255,255,255,0.1);
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .slider-ends {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #999;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: #333;
+            outline: none;
+            border-radius: 3px;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #ddd;
+            transform: scale(1.2);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            cursor: pointer;
+            border-radius: 50%;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        
+        input[type="range"]::-moz-range-thumb:hover {
+            background: #ddd;
+            transform: scale(1.2);
+        }
+        
+        .response-box {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            min-height: 200px;
+            transition: all 0.3s ease;
+        }
+        
+        .response-box:hover {
+            border-color: #666;
+        }
+        
+        .response-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #ddd;
+        }
+        
+        .response-text {
+            line-height: 1.7;
+            color: #ccc;
+        }
+        
+        .btn-save {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn-save:hover {
+            background: #ddd;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255,255,255,0.3);
+        }
+        
+        .saved-modes {
+            margin-top: 60px;
+        }
+        
+        .mode-card {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .mode-card:hover {
+            border-color: #666;
+            background: #1a1a1a;
+            transform: translateX(5px);
+        }
+        
+        .mode-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .mode-specs {
+            font-size: 0.85rem;
+            color: #999;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .spec-tag {
+            background: #222;
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid #333;
+        }
+        
+        .modal-content {
+            background: #111;
+            color: #fff;
+            border: 1px solid #333;
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid #333;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid #333;
+        }
+        
+        .btn-close {
+            filter: invert(1);
+        }
+        
+        input.form-control {
+            background: #222;
+            border: 1px solid #444;
+            color: #fff;
+        }
+        
+        input.form-control:focus {
+            background: #222;
+            border-color: #666;
+            color: #fff;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Empathy Spectrum for AI</h1>
+        <p class="subtitle">Explore different AI personality dimensions and create your unique interaction mode</p>
+        
+        <div id="sliders">
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Logical vs Emotional</span>
+                    <span id="logical-value">3</span>
+                </div>
+                <input type="range" id="logical" min="1" max="5" value="3" step="1">
+                <div class="slider-ends">
+                    <span>Purely Logical</span>
+                    <span>Emotionally Rich</span>
+                </div>
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Scientific vs Personal</span>
+                    <span id="scientific-value">3</span>
+                </div>
+                <input type="range" id="scientific" min="1" max="5" value="3" step="1">
+                <div class="slider-ends">
+                    <span>Scientific</span>
+                    <span>Overly Personal</span>
+                </div>
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Context Awareness</span>
+                    <span id="context-value">3</span>
+                </div>
+                <input type="range" id="context" min="1" max="5" value="3" step="1">
+                <div class="slider-ends">
+                    <span>Minimal Context</span>
+                    <span>Hyper-Contextual</span>
+                </div>
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Confidence Level</span>
+                    <span id="confidence-value">3</span>
+                </div>
+                <input type="range" id="confidence" min="1" max="5" value="3" step="1">
+                <div class="slider-ends">
+                    <span>Tentative</span>
+                    <span>Decisive</span>
+                </div>
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Creativity Style</span>
+                    <span id="creativity-value">3</span>
+                </div>
+                <input type="range" id="creativity" min="1" max="5" value="3" step="1">
+                <div class="slider-ends">
+                    <span>Practical</span>
+                    <span>Imaginative</span>
+                </div>
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Formality</span>
+                    <span id="formality-value">3</span>
+                </div>
+                <input type="range" id="formality" min="1" max="5" value="3" step="1">
+                <div class="slider-ends">
+                    <span>Casual</span>
+                    <span>Professional</span>
+                </div>
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Verbosity</span>
+                    <span id="verbosity-value">3</span>
+                </div>
+                <input type="range" id="verbosity" min="1" max="5" value="3" step="1">
+                <div class="slider-ends">
+                    <span>Concise</span>
+                    <span>Elaborate</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="response-box">
+            <div class="response-title">AI Response Preview:</div>
+            <div class="response-text" id="response-text">
+                Adjust the sliders above to see how the AI's response style changes based on your empathy spectrum settings.
+            </div>
+        </div>
+        
+        <div class="text-center">
+            <button class="btn-save" data-bs-toggle="modal" data-bs-target="#saveModal">Save This Empathy Mode</button>
+        </div>
+        
+        <div class="saved-modes">
+            <h3 class="mb-4">Community Empathy Modes</h3>
+            <div id="modes-list"></div>
+        </div>
+    </div>
+    
+    <!-- Save Modal -->
+    <div class="modal fade" id="saveModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Save Your Empathy Mode</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="mode-name" placeholder="Give your mode a name...">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-save" onclick="saveMode()">Save Mode</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- View Modal -->
+    <div class="modal fade" id="viewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="view-modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="view-modal-specs"></div>
+                    <div class="response-box mt-4">
+                        <div class="response-title">Response Preview:</div>
+                        <div class="response-text" id="view-modal-response"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const sliders = ['logical', 'scientific', 'context', 'confidence', 'creativity', 'formality', 'verbosity'];
+        const responses = {
+            sample: "I'm struggling with starting my new project. Any advice?"
+        };
+        
+        // Initialize sliders
+        sliders.forEach(slider => {
+            const input = document.getElementById(slider);
+            const valueDisplay = document.getElementById(`${slider}-value`);
+            
+            input.addEventListener('input', (e) => {
+                valueDisplay.textContent = e.target.value;
+                updateResponse();
+            });
+        });
+        
+        function getSliderValues() {
+            return {
+                logical: parseInt(document.getElementById('logical').value),
+                scientific: parseInt(document.getElementById('scientific').value),
+                context: parseInt(document.getElementById('context').value),
+                confidence: parseInt(document.getElementById('confidence').value),
+                creativity: parseInt(document.getElementById('creativity').value),
+                formality: parseInt(document.getElementById('formality').value),
+                verbosity: parseInt(document.getElementById('verbosity').value)
+            };
+        }
+        
+        function generateResponse(values) {
+            let response = "";
+            
+            // Base response structure
+            if (values.confidence >= 4) {
+                response += "Here's what you need to do: ";
+            } else if (values.confidence <= 2) {
+                response += "Perhaps you might consider... ";
+            } else {
+                response += "I'd suggest ";
+            }
+            
+            // Main advice
+            if (values.logical >= 4) {
+                response += "break down the project into quantifiable milestones with clear success metrics. ";
+            } else if (values.logical <= 2) {
+                response += "listen to your intuition about what feels right and let your passion guide the first steps. ";
+            } else {
+                response += "balance planning with spontaneity - outline key goals but stay flexible. ";
+            }
+            
+            // Emotional/Personal touch
+            if (values.scientific <= 2 && values.logical <= 2) {
+                response += "I really feel that your hesitation is actually your mind's way of preparing for something important. ";
+            } else if (values.scientific >= 4) {
+                response += "Research shows procrastination often stems from perfectionism or unclear objectives. ";
+            }
+            
+            // Creativity element
+            if (values.creativity >= 4) {
+                response += "What if you imagined this project as a blank canvas? Start with wild ideas, then refine. ";
+            } else if (values.creativity <= 2) {
+                response += "Use proven frameworks like SMART goals or the Eisenhower Matrix. ";
+            }
+            
+            // Context awareness
+            if (values.context >= 4) {
+                response += "Given that you're asking this question now, it seems like you're in the contemplation phase - that's actually progress! ";
+            }
+            
+            // Verbosity
+            if (values.verbosity >= 4) {
+                response += "To elaborate further: the initial phase of any project carries psychological weight. The blank page phenomenon is well-documented. ";
+                response += "Consider breaking through this by committing to just 10 minutes of work - momentum builds naturally from small starts. ";
+            } else if (values.verbosity <= 2) {
+                response += "Start small. 10 minutes. Today.";
+            }
+            
+            // Formality
+            if (values.formality >= 4) {
+                response = response.replace("Here's", "Please consider the following approach:");
+                response = response.replace("you need to", "it would be advisable to");
+            } else if (values.formality <= 2) {
+                response = response.replace("consider", "try");
+                response += " You got this!";
+            }
+            
+            return response;
+        }
+        
+        function updateResponse() {
+            const values = getSliderValues();
+            const response = generateResponse(values);
+            document.getElementById('response-text').textContent = response;
+        }
+        
+        async function saveMode() {
+            const name = document.getElementById('mode-name').value.trim();
+            if (!name) {
+                alert('Please enter a name for your empathy mode');
+                return;
+            }
+            
+            const values = getSliderValues();
+            const mode = {
+                name: name,
+                values: values,
+                timestamp: new Date().toISOString()
+            };
+            
+            try {
+                // Store in persistent storage
+                const key = `mode-${Date.now()}`;
+                await window.storage.set(key, JSON.stringify(mode), true);
+                
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('saveModal'));
+                modal.hide();
+                document.getElementById('mode-name').value = '';
+                
+                // Reload modes
+                loadModes();
+            } catch (error) {
+                console.error('Save error:', error);
+                alert('Failed to save mode. Please try again.');
+            }
+        }
+        
+        async function loadModes() {
+            const modesList = document.getElementById('modes-list');
+            modesList.innerHTML = '<p style="color: #999;">Loading modes...</p>';
+            
+            try {
+                const result = await window.storage.list('mode-', true);
+                if (!result || !result.keys || result.keys.length === 0) {
+                    modesList.innerHTML = '<p style="color: #999;">No saved modes yet. Be the first to create one!</p>';
+                    return;
+                }
+                
+                const modes = [];
+                for (const key of result.keys) {
+                    try {
+                        const data = await window.storage.get(key, true);
+                        if (data && data.value) {
+                            modes.push(JSON.parse(data.value));
+                        }
+                    } catch (e) {
+                        console.error('Error loading mode:', e);
+                    }
+                }
+                
+                if (modes.length === 0) {
+                    modesList.innerHTML = '<p style="color: #999;">No saved modes yet. Be the first to create one!</p>';
+                    return;
+                }
+                
+                modes.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                
+                modesList.innerHTML = modes.map(mode => `
+                    <div class="mode-card" onclick='viewMode(${JSON.stringify(mode)})'>
+                        <div class="mode-name">${escapeHtml(mode.name)}</div>
+                        <div class="mode-specs">
+                            <span class="spec-tag">Logical: ${mode.values.logical}</span>
+                            <span class="spec-tag">Scientific: ${mode.values.scientific}</span>
+                            <span class="spec-tag">Context: ${mode.values.context}</span>
+                            <span class="spec-tag">Confidence: ${mode.values.confidence}</span>
+                            <span class="spec-tag">Creativity: ${mode.values.creativity}</span>
+                            <span class="spec-tag">Formality: ${mode.values.formality}</span>
+                            <span class="spec-tag">Verbosity: ${mode.values.verbosity}</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Load error:', error);
+                modesList.innerHTML = '<p style="color: #999;">Unable to load modes. Please refresh the page.</p>';
+            }
+        }
+        
+        function viewMode(mode) {
+            document.getElementById('view-modal-title').textContent = mode.name;
+            
+            const specs = `
+                <div class="row">
+                    <div class="col-6 mb-3"><strong>Logical vs Emotional:</strong> ${mode.values.logical}/5</div>
+                    <div class="col-6 mb-3"><strong>Scientific vs Personal:</strong> ${mode.values.scientific}/5</div>
+                    <div class="col-6 mb-3"><strong>Context Awareness:</strong> ${mode.values.context}/5</div>
+                    <div class="col-6 mb-3"><strong>Confidence Level:</strong> ${mode.values.confidence}/5</div>
+                    <div class="col-6 mb-3"><strong>Creativity Style:</strong> ${mode.values.creativity}/5</div>
+                    <div class="col-6 mb-3"><strong>Formality:</strong> ${mode.values.formality}/5</div>
+                    <div class="col-6 mb-3"><strong>Verbosity:</strong> ${mode.values.verbosity}/5</div>
+                </div>
+            `;
+            document.getElementById('view-modal-specs').innerHTML = specs;
+            
+            const response = generateResponse(mode.values);
+            document.getElementById('view-modal-response').textContent = response;
+            
+            const modal = new bootstrap.Modal(document.getElementById('viewModal'));
+            modal.show();
+        }
+        
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+        
+        // Initialize
+        updateResponse();
+        loadModes();
+    </script>
+</body>
+</html>
