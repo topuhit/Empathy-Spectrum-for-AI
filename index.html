@@ -16,23 +16,63 @@
             background: #000;
             color: #fff;
             min-height: 100vh;
-            padding: 40px 0;
+            padding: 0;
+            margin: 0;
         }
         
         .container {
             max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero-section {
+            background-image: url('./AdobeStock_1677416239.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 400px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            align-items: center;
+            position: relative;
+            margin: 0 0px;
+            margin-top: 0px;
+        }
+        
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #ff6b6b);
+        }
+        
+        .hero-content {
+            padding: 60px 40px;
+            max-width: 600px;
         }
         
         h1 {
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             font-size: 2.5rem;
+            color: #000;
+            text-align: left;
         }
         
         .subtitle {
-            color: #999;
-            margin-bottom: 40px;
+            color: #333;
+            margin-bottom: 0;
             font-size: 1.1rem;
+            text-align: left;
+            line-height: 1.6;
+        }
+        
+        .content-wrapper {
+            padding: 40px 0;
         }
         
         .main-content {
@@ -45,6 +85,24 @@
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
+            }
+            
+            .hero-section {
+                min-height: 300px;
+                margin: 20px 10px;
+                border-radius: 8px 8px 0 0;
+            }
+            
+            .hero-content {
+                padding: 40px 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
             }
         }
         
@@ -204,10 +262,19 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Your Empathy Spectrum for AI</h1>
-        <p class="subtitle">Explore different AI personality dimensions and create your unique interaction mode</p>
-        
+
+     <div class="container content-wrapper">
+            <div class="hero-section">
+        <div class="hero-content">
+            <h1>Your Empathy Spectrum for AI</h1>
+            <p class="subtitle">Explore different AI personality dimensions and create your unique interaction mode</p>
+        </div>
+    </div>
+
+     </div>
+
+    
+    <div class="container content-wrapper">
         <div class="main-content">
             <!-- Left Column: Sliders -->
             <div class="sliders-column">
